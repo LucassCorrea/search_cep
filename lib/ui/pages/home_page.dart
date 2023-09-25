@@ -4,8 +4,8 @@ import 'package:search_cep/core/data/model/cep_model.dart';
 import 'package:search_cep/core/data/repository/cep_repository.dart';
 import 'package:search_cep/core/data/repository/viacep_repository.dart';
 import 'package:search_cep/core/utils/validators/validator.dart';
-import 'package:search_cep/ui/pages/add_page.dart';
 import 'package:search_cep/ui/widgets/drawer_widget.dart';
+import 'package:search_cep/ui/widgets/snackbar_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -49,61 +49,22 @@ class _HomePageState extends State<HomePage> {
 
     if (cepModel != null) {
       data = {
-        0: {
-          "titulo": "Localidade",
-          "valor": cepModel!.localidade,
-        },
-        1: {
-          "titulo": "Logradouro",
-          "valor": cepModel!.logradouro,
-        },
-        2: {
-          "titulo": "Estado",
-          "valor": cepModel!.uf,
-        },
-        3: {
-          "titulo": "Bairro",
-          "valor": cepModel!.bairro,
-        },
-        4: {
-          "titulo": "Complemento",
-          "valor": cepModel!.complemento,
-        },
-        5: {
-          "titulo": "DDD",
-          "valor": cepModel!.ddd,
-        },
-        6: {
-          "titulo": "IBGE",
-          "valor": cepModel!.ibge,
-        },
-        7: {
-          "titulo": "DDD",
-          "valor": cepModel!.siafi,
-        },
+        0: {"titulo": "Localidade", "valor": cepModel!.localidade},
+        1: {"titulo": "Logradouro", "valor": cepModel!.logradouro},
+        2: {"titulo": "UF", "valor": cepModel!.uf},
+        3: {"titulo": "Bairro", "valor": cepModel!.bairro},
+        4: {"titulo": "Complemento", "valor": cepModel!.complemento},
+        5: {"titulo": "DDD", "valor": cepModel!.ddd},
+        6: {"titulo": "IBGE", "valor": cepModel!.ibge},
+        7: {"titulo": "DDD", "valor": cepModel!.siafi},
       };
     }
 
-    if (context.mounted) {
-      if (cepModel == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text("CEP não encontrado, deseja cadastrar?"),
-            action: SnackBarAction(
-              label: "Cadastrar",
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddPage(),
-                ),
-              ),
-            ),
-          ),
-        );
+    setState(() {
+      if (context.mounted) {
+        SnackbarMessengerWidget.validateCep(context, cepModel);
       }
-    }
-
-    setState(() {});
+    });
   }
 
   @override

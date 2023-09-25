@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:search_cep/core/data/api/cep_api_config.dart';
@@ -18,7 +17,7 @@ class CEPRepository implements CEPService {
 
       if (response.statusCode == 200) {
         var results = <CEPModel>[];
-        jsonDecode(response.body)['results'].forEach((v) {
+        await jsonDecode(response.body)['results'].forEach((v) {
           results.add(CEPModel.fromJson(v));
         });
 
@@ -42,7 +41,7 @@ class CEPRepository implements CEPService {
 
       if (response.statusCode == 200) {
         var results = <CEPModel>[];
-        jsonDecode(response.body)['results'].forEach((v) {
+        await jsonDecode(response.body)['results'].forEach((v) {
           results.add(CEPModel.fromJson(v));
         });
 
@@ -66,17 +65,31 @@ class CEPRepository implements CEPService {
       );
 
       if (response.statusCode == 201) {
-        debugPrint("Deu certo!");
+        debugPrint("Dados enviados com sucesso!");
       } else {
-        debugPrint("Deu erro!");
+        debugPrint("Erro ao enviar dados!");
       }
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> put(CEPModel cepModel) {
-    throw UnimplementedError();
+  Future<void> put(CEPModel cepModel) async {
+    try {
+      var response = await http.put(
+        Uri.parse(CEPApiConfig.urlWithId(cepModel.objectId!)),
+        headers: CEPApiConfig.headers,
+        body: cepModel.toJson(),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Dados atualizados com sucesso!");
+      } else {
+        debugPrint("Erro ao atulizar dados!");
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> delete(String id) async {
@@ -89,10 +102,9 @@ class CEPRepository implements CEPService {
       if (response.statusCode == 200) {
         debugPrint("Excluído com sucesso");
       } else {
-        debugPrint("Erro");
+        debugPrint("Erro ao deletar dados!");
       }
     } catch (e) {
-      if (e is SocketException) {}
       rethrow;
     }
   }
