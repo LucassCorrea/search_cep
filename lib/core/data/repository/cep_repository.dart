@@ -79,9 +79,11 @@ class CEPRepository implements CEPService {
       var response = await http.put(
         Uri.parse(CEPApiConfig.urlWithId(cepModel.objectId!)),
         headers: CEPApiConfig.headers,
-        body: cepModel.toJson(),
+        body: jsonEncode(cepModel.toJson()),
       );
 
+      debugPrint(response.request.toString());
+      debugPrint(response.body);
       if (response.statusCode == 200) {
         debugPrint("Dados atualizados com sucesso!");
       } else {
