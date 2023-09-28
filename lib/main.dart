@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:search_cep/ui/pages/home_page.dart';
 
-void main() async {
+Future main() async {
   await dotenv.load();
 
   runApp(const MainApp());
